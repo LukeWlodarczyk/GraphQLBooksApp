@@ -116,8 +116,6 @@ const Mutation = new GraphQLObjectType({
 				authorId: { type: GraphQLID },
 			},
 			resolve(parent, args) {
-				Object.keys(args).forEach(key => args[key] == null && delete args[key]);
-
 				return Book.findByIdAndUpdate(args.id, args, { new: true });
 			},
 		},
