@@ -22,7 +22,7 @@ const BookType = new GraphQLObjectType({
 		author: {
 			type: AuthorType,
 			resolve(parent, args) {
-				return authors.find(author => author.id === parent.authorId);
+				return Author.findById(parent.authorId);
 			},
 		},
 	}),
@@ -37,7 +37,7 @@ const AuthorType = new GraphQLObjectType({
 		books: {
 			type: new GraphQLList(BookType),
 			resolve(parent, args) {
-				return books.filter(book => parent.id === book.authorId);
+				return Book.find({ authorId: parent.id });
 			},
 		},
 	}),
@@ -50,28 +50,60 @@ const RootQuery = new GraphQLObjectType({
 			type: BookType,
 			args: { id: { type: GraphQLID } },
 			resolve(parent, args) {
-				//get data from db
-				return books.find(book => book.id === args.id);
+				return Book.findById(args.id);
 			},
 		},
 		author: {
 			type: AuthorType,
 			args: { id: { type: GraphQLID } },
 			resolve(parent, args) {
-				//get data from db
-				return authors.find(author => author.id === args.id);
+				return Author.findById(args.id);
 			},
 		},
 		books: {
 			type: new GraphQLList(BookType),
 			resolve(parent, args) {
-				return books;
+				return Book.find({});
 			},
 		},
 		authors: {
 			type: new GraphQLList(AuthorType),
 			resolve(parent, args) {
-				return authors;
+				return Author.find({});
+			},
+		},
+	},
+});
+
+const Mutation = new GraphQLObjectType({
+	name: 'Mutation',
+	fields: {
+		addAuthor: {
+			type: AuthorType,
+			args: {
+				name: { type: GraphQLString },
+				age: { type: GraphQLInt },
+			},
+			resolve(parent, args) {
+				return new Author({
+					name: args.name,
+					age: args.age,
+				}).save();
+			},
+		},
+		addBook: {
+			type: BookType,
+			args: {
+				name: { type: GraphQLString },
+				genre: { type: GraphQLString },
+				authorId: { type: GraphQLID },
+			},
+			resolve(parent, args) {
+				return new Book({
+					name: args.name,
+					genre: args.genre,
+					authorId: args.authorId,
+				}).save();
 			},
 		},
 	},
@@ -79,4 +111,5 @@ const RootQuery = new GraphQLObjectType({
 
 module.exports = new GraphQLSchema({
 	query: RootQuery,
+	mutation: Mutation,
 });
