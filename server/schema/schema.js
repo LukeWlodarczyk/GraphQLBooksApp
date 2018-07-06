@@ -1,4 +1,5 @@
 const graphql = require('graphql');
+const mongoose = require('mongoose');
 
 const {
 	GraphQLObjectType,
@@ -9,16 +10,8 @@ const {
 	GraphQLList,
 } = graphql;
 
-const books = [
-	{ name: 'Dark', id: '1', genre: 'fantasy', authorId: '1' },
-	{ name: 'Happy life', id: '2', genre: 'fantasy', authorId: '1' },
-	{ name: 'Love', id: '3', genre: 'romance', authorId: '2' },
-];
-
-const authors = [
-	{ name: 'Stephen King', id: '1', age: 33 },
-	{ name: 'Suzan Mayers', id: '2', age: 34 },
-];
+const Book = mongoose.model('books');
+const Author = mongoose.model('authors');
 
 const BookType = new GraphQLObjectType({
 	name: 'Book',
