@@ -1,23 +1,32 @@
 import React, { Component } from 'react';
-import { gql } from 'apollo-boost';
 import { graphql } from 'react-apollo';
-
-const getBooksQuery = gql`
-	{
-		books1 {
-			name
-			id
-		}
-	}
-`;
+import { getBooksQuery } from '../queries/queries';
 
 class BookList extends Component {
+	renderContent() {
+		const { error, loading, books } = this.props.data;
+
+		if (loading) {
+			return <p>Loading books...</p>;
+		}
+
+		if (error) {
+			return <p>Sorry, there was an errror while fetching {':('}</p>;
+		}
+
+		const content = books.map(book => {
+			return <li key={book.id}>{book.name}</li>;
+		});
+
+		return content;
+	}
+
 	render() {
-		console.log(this.props);
 		return (
 			<div>
 				<ul id="book-list">
-					<li>Books</li>
+					<p>Books</p>
+					{this.renderContent()}
 				</ul>
 			</div>
 		);
