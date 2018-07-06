@@ -1,10 +1,20 @@
 import React, { Component } from 'react';
-import { graphql } from 'react-apollo';
-import { getBooksQuery } from '../queries/queries';
+import { graphql, compose } from 'react-apollo';
+import { getBooksQuery, deleteBookMutation } from '../queries/queries';
 
 class BookList extends Component {
+	deleteBook = e => {
+		console.log(e.target.value);
+		this.props.deleteBook({
+			variables: {
+				id: e.target.value,
+			},
+			refetchQueries: [{ query: getBooksQuery }],
+		});
+	};
+
 	renderContent() {
-		const { error, loading, books } = this.props.data;
+		const { error, loading, books } = this.props.books;
 
 		if (loading) {
 			return <p>Loading books...</p>;
@@ -15,7 +25,15 @@ class BookList extends Component {
 		}
 
 		const content = books.map(book => {
-			return <li key={book.id}>{book.name}</li>;
+			console.log(book.id);
+			return (
+				<div key={book.id}>
+					<li>{book.name}</li>
+					<button value={book.id} onClick={this.deleteBook}>
+						x
+					</button>
+				</div>
+			);
 		});
 
 		return content;
@@ -33,4 +51,7 @@ class BookList extends Component {
 	}
 }
 
-export default graphql(getBooksQuery)(BookList);
+export default compose(
+	graphql(getBooksQuery, { name: 'books' }),
+	graphql(deleteBookMutation, { name: 'deleteBook' })
+)(BookList);
