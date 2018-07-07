@@ -45,26 +45,31 @@ class AddBook extends Component {
 
 	handleSubmit = e => {
 		e.preventDefault();
+		const { name, genre, authorId } = this.state;
+
+		const isValid = name && genre && authorId;
+
+		if (!isValid) return;
+
+		this.props.addBook({
+			variables: {
+				name: name,
+				genre: genre,
+				authorId: authorId,
+			},
+			refetchQueries: [{ query: getBooksQuery }],
+		});
 
 		this.setState({
 			name: '',
 			genre: '',
 			authorId: '',
 		});
-
-		this.props.addBook({
-			variables: {
-				name: this.state.name,
-				genre: this.state.genre,
-				authorId: this.state.authorId,
-			},
-			refetchQueries: [{ query: getBooksQuery }],
-		});
 	};
 
 	render() {
 		return (
-			<form id="add-book" onSubmit={this.handleSubmit}>
+			<form className="add-book" onSubmit={this.handleSubmit}>
 				<div className="field">
 					<label>Book name:</label>
 					<input
