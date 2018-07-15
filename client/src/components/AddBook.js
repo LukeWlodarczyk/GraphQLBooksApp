@@ -51,20 +51,22 @@ class AddBook extends Component {
 
 		if (!isValid) return;
 
-		this.props.addBook({
-			variables: {
-				name: name,
-				genre: genre,
-				authorId: authorId,
-			},
-			refetchQueries: [{ query: getBooksQuery }],
-		});
-
-		this.setState({
-			name: '',
-			genre: '',
-			authorId: '',
-		});
+		this.props
+			.addBook({
+				variables: {
+					name: name,
+					genre: genre,
+					authorId: authorId,
+				},
+				refetchQueries: [{ query: getBooksQuery }],
+			})
+			.then(() => {
+				this.setState({
+					name: '',
+					genre: '',
+					authorId: '',
+				});
+			});
 	};
 
 	render() {
