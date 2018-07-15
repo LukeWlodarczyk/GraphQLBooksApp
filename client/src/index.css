@@ -46,12 +46,28 @@ li {
 	margin-left: calc(50% - 11px);
 }
 
+.toggle {
+	position: fixed;
+	bottom: 0;
+	left: 0;
+}
+
+.toggle-btn {
+	border: 1px solid #880e4f;
+	background: transparent;
+	padding: 0.5em;
+	position: relative;
+	top: 2.5em;
+	left: 10px;
+}
+
+.toggle-btn:hover {
+	cursor: pointer;
+}
+
 form {
 	background: #fff;
 	padding: 20px;
-	position: fixed;
-	left: 0;
-	bottom: 0;
 	width: 400px;
 }
 
